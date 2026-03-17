@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: hidop-bot-app
+    env: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: bash run_render.sh
+    envVars:
+      - key: BOT_TOKEN
+        sync: false
+      - key: ADMIN_ID
+        sync: false
+      - key: PYTHON_VERSION
+        value: 3.11.11
+    disk:
+      name: hidop-data
+      mountPath: /opt/render/project/src
+      sizeGB: 1

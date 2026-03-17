@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Tingla Bot Playlist</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <div class="top-toast is-hidden" id="topToast" role="status" aria-live="polite">saqlandi ✅</div>
+    <div class="telegram-bar">
+      <button class="telegram-bar__icon" type="button" aria-label="Orqaga">
+        <span class="cross-icon"></span>
+      </button>
+      <div class="telegram-bar__brand">
+        <div class="telegram-bar__logo">H</div>
+        <div>
+          <p class="telegram-bar__eyebrow">Mini App</p>
+          <strong>HIDOP BOT</strong>
+        </div>
+      </div>
+      <button class="telegram-bar__icon telegram-bar__profile" type="button" aria-label="Profil">
+        <span class="profile-badge">U</span>
+      </button>
+    </div>
+
+    <div class="profile-modal is-hidden" id="profileModal" aria-hidden="true">
+      <div class="profile-modal__backdrop" id="profileModalBackdrop"></div>
+      <div class="profile-card" role="dialog" aria-modal="true" aria-labelledby="profileModalTitle">
+        <button class="profile-card__close" id="profileModalClose" type="button" aria-label="Yopish">×</button>
+        <div class="profile-card__badge">U</div>
+        <p class="profile-card__eyebrow">Profil</p>
+        <h2 id="profileModalTitle">HIDOP BOT User</h2>
+        <label class="profile-card__field" for="profileInput">
+          <input id="profileInput" type="text" placeholder="ID ingizni kiriting" />
+        </label>
+        <button class="profile-card__submit" id="profileSubmit" type="button">KIRISH</button>
+      </div>
+    </div>
+
+    <section class="sheet">
+      <header class="hero">
+        <div class="hero__inner">
+          <div>
+            <p class="eyebrow">Kutubxona</p>
+            <h1>Pleylist</h1>
+          </div>
+          <button class="search-toggle" id="searchToggle" aria-label="Qidiruvni ochish">
+            <span></span>
+          </button>
+        </div>
+        <div class="search-row is-hidden" id="searchRow">
+          <input id="searchInput" type="search" placeholder="Video nomi, ID yoki bo'lim bo'yicha qidiring..." autocomplete="off" />
+        </div>
+        <div class="stats" id="stats"></div>
+        <div class="filters" id="filters"></div>
+      </header>
+
+      <main class="content">
+        <section class="playlist" id="playlist"></section>
+        <p class="empty is-hidden" id="emptyState">Hech narsa topilmadi.</p>
+        <section class="library-section" id="librarySection">
+          <div class="library-section__head">
+            <div>
+              <h2>Botga qo'shilgan videolar</h2>
+            </div>
+            <span class="library-section__count" id="libraryCount">0 ta</span>
+          </div>
+          <div class="library-list" id="libraryList"></div>
+          <p class="empty is-hidden" id="libraryEmpty">Katalogda hozircha video yo'q.</p>
+        </section>
+      </main>
+    </section>
+  </div>
+
+  <script src="https://telegram.org/js/telegram-web-app.js"></script>
+  <script src="./app.js" type="module"></script>
+</body>
+</html>
