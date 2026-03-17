@@ -3046,11 +3046,22 @@ async def handle_saved_videos_request(
         return False
 
     user_id = update.effective_user.id
+    reply_markup = InlineKeyboardMarkup(
+        [
+            [
+                InlineKeyboardButton(
+                    "Pleylist 📁",
+                    url="https://hidop-bot-app.onrender.com",
+                )
+            ]
+        ]
+    )
     await message.reply_text(
         f"saqlangan videolar Pleylist 📁 da saqlanayapti\n"
         f"kirish uchun IDi `{user_id}`\n"
         f"IDi ni saytga kiriting ✅",
         parse_mode="Markdown",
+        reply_markup=reply_markup,
     )
     return True
 
