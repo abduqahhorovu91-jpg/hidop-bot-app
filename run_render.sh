@@ -1,15 +1,9 @@
-#!/usr/bin/env bash
-set -e
+#!/bin/bash
 
-cd /opt/render/project/src
+# Start backend server
+python3 backend/server.py &
 
+# Start Telegram bot
 python3 bot.py &
-BOT_PID=$!
 
-cleanup() {
-  kill "$BOT_PID" 2>/dev/null || true
-}
-
-trap cleanup EXIT INT TERM
-
-exec python3 backend/server.py
+wait

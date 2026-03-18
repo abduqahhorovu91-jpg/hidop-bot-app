@@ -1,1 +1,0 @@
-# hidop-bot-app
