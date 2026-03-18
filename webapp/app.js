@@ -210,6 +210,8 @@ async function refreshSavedItems() {
 }
 
 function buildStats(items) {
+  if (!statsEl) return;
+
   const total = items.length;
   const totalDuration = items.reduce((sum, item) => sum + Number(item.duration || 0), 0);
   const categories = new Set(items.map((item) => item.category).filter(Boolean));
@@ -357,14 +359,79 @@ function getSearchScore(item) {
   return 0;
 }
 
+function normalizeSearchText(value) {
+  return String(value || "")
+    .toLowerCase()
+    .replace(/[_-]+/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function extractEpisodeNumber(value) {
+  const text = normalizeSearchText(value);
+  const episodePatterns = [
+    /(\d+)\s*-\s*qism\b/,
+    /(\d+)\s*qism\b/,
+    /\bqism\s*(\d+)\b/,
+    /\bpart\s*(\d+)\b/,
+    /\bep(?:isode)?\s*(\d+)\b/,
+  ];
+
+  for (const pattern of episodePatterns) {
+    const match = text.match(pattern);
+    if (match) {
+      return Number(match[1]);
+    }
+  }
+
+  const trailingNumber = text.match(/(\d+)(?!.*\d)/);
+  return trailingNumber ? Number(trailingNumber[1]) : Number.POSITIVE_INFINITY;
+}
+
+function getTitleBase(value) {
+  return normalizeSearchText(value)
+    .replace(/\b\d+\s*-\s*qism\b/g, "")
+    .replace(/\b\d+\s*qism\b/g, "")
+    .replace(/\bqism\s*\d+\b/g, "")
+    .replace(/\bpart\s*\d+\b/g, "")
+    .replace(/\bep(?:isode)?\s*\d+\b/g, "")
+    .replace(/\b\d+\b/g, "")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
 function sortBySearchRelevance(items) {
+  const naturalCollator = new Intl.Collator("uz", {
+    numeric: true,
+    sensitivity: "base",
+  });
+
   return items.slice().sort((left, right) => {
     const scoreDiff = getSearchScore(right) - getSearchScore(left);
     if (scoreDiff !== 0) return scoreDiff;
 
-    const leftTitle = String(left.title || "").toLowerCase();
-    const rightTitle = String(right.title || "").toLowerCase();
-    const titleDiff = leftTitle.localeCompare(rightTitle);
+    const leftTitle = normalizeSearchText(left.saved_name || left.title || "");
+    const rightTitle = normalizeSearchText(right.saved_name || right.title || "");
+    const leftBase = getTitleBase(leftTitle);
+    const rightBase = getTitleBase(rightTitle);
+
+    if (activeQuery) {
+      const leftBaseStarts = leftBase.startsWith(activeQuery);
+      const rightBaseStarts = rightBase.startsWith(activeQuery);
+      if (leftBaseStarts !== rightBaseStarts) return rightBaseStarts - leftBaseStarts;
+    }
+
+    const baseDiff = leftBase.localeCompare(rightBase);
+    if (baseDiff !== 0) return baseDiff;
+
+    const leftEpisode = extractEpisodeNumber(leftTitle);
+    const rightEpisode = extractEpisodeNumber(rightTitle);
+    const leftEpisodeRank = Number.isFinite(leftEpisode) ? leftEpisode : Number.MAX_SAFE_INTEGER;
+    const rightEpisodeRank = Number.isFinite(rightEpisode) ? rightEpisode : Number.MAX_SAFE_INTEGER;
+    const episodeDiff = leftEpisodeRank - rightEpisodeRank;
+    if (episodeDiff !== 0) return episodeDiff;
+
+    const titleDiff = naturalCollator.compare(leftTitle, rightTitle);
     if (titleDiff !== 0) return titleDiff;
 
     return Number(left.id || 0) - Number(right.id || 0);
@@ -416,10 +483,7 @@ function renderLibrary() {
 }
 
 function buildFilters(items) {
-  const discovered = new Set(["HOME"]);
-  if (selectedTargetUserId) {
-    discovered.add("Ombor");
-  }
+  const discovered = new Set(["HOME", "Ombor"]);
   items.forEach((item) => {
     if (item.category && !discovered.has(item.category)) {
       discovered.add(item.category);
@@ -433,6 +497,14 @@ function buildFilters(items) {
     button.textContent = category;
     button.type = "button";
     button.addEventListener("click", () => {
+      if (category === "Ombor" && !selectedTargetUserId) {
+        activeCategory = "Ombor";
+        buildFilters(items);
+        render();
+        renderLibrary();
+        openProfileModal();
+        return;
+      }
       activeCategory = category;
       buildFilters(items);
       render();
@@ -600,6 +672,7 @@ async function submitProfileId() {
   persistTargetUserId(rawValue);
   syncProfileUi();
   await refreshSavedItems();
+  activeCategory = "Ombor";
   buildFilters(allItems);
   render();
   renderLibrary();

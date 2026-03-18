@@ -20,8 +20,8 @@ from shared_db import load_saved_videos as db_load_saved_videos
 from shared_db import load_video_catalog as db_load_video_catalog
 
 WEBAPP_DIR = ROOT_DIR / "webapp"
-HOST = os.getenv("BACKEND_HOST", "0.0.0.0")
-PORT = int(os.getenv("PORT", os.getenv("BACKEND_PORT", "8080")))
+HOST = os.getenv("BACKEND_HOST", "127.0.0.1")
+PORT = int(os.getenv("BACKEND_PORT", "8080"))
 BOT_TOKEN = os.getenv("BOT_TOKEN", "").strip()
 BOT_API_URL = f"https://api.telegram.org/bot{BOT_TOKEN}" if BOT_TOKEN else ""
 
@@ -30,18 +30,6 @@ logging.basicConfig(
     level=logging.INFO,
 )
 logger = logging.getLogger(__name__)
-STARTUP_BANNER = (
-    "🔥✈️⏳🎥🧭⏰✉️🗝️✅🖊️❤️"
-    "🔥✈️⏳🎥🧭⏰✉️🗝️✅🖊️❤️"
-    "🔥✈️⏳🎥🧭⏰✉️🗝️✅🖊️❤️"
-    "🔥✈️⏳🎥🧭⏰✉️🗝️✅🖊️❤️"
-    "🔥✈️⏳🎥🧭⏰✉️🗝️✅🖊️❤️"
-    "🔥✈️⏳🎥🧭⏰✉️🗝️✅🖊️❤️"
-    "🔥✈️⏳🎥🧭⏰✉️🗝️✅🖊️❤️"
-    "🔥✈️⏳🎥🧭⏰✉️🗝️✅🖊️❤️"
-    "🔥✈️⏳🎥🧭⏰✉️🗝️✅🖊️❤️"
-    "🔥✈️⏳🎥🧭⏰✉️🗝️✅🖊️❤️"
-)
 
 
 def format_duration(seconds: int) -> str:
@@ -326,7 +314,6 @@ class AppHandler(BaseHTTPRequestHandler):
 
 
 def main() -> None:
-    print(STARTUP_BANNER, flush=True)
     server = ThreadingHTTPServer((HOST, PORT), AppHandler)
     logger.info("Backend running on http://%s:%s", HOST, PORT)
     server.serve_forever()

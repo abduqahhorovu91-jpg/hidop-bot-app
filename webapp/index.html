@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Tingla Bot Playlist</title>
+  <title>Hidop_bot</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;700;800&display=swap" rel="stylesheet" />
@@ -13,19 +13,25 @@
   <div class="app-shell">
     <div class="top-toast is-hidden" id="topToast" role="status" aria-live="polite">saqlandi ✅</div>
     <div class="telegram-bar">
-      <button class="telegram-bar__icon" type="button" aria-label="Orqaga">
-        <span class="cross-icon"></span>
-      </button>
       <div class="telegram-bar__brand">
         <div class="telegram-bar__logo">H</div>
-        <div>
-          <p class="telegram-bar__eyebrow">Mini App</p>
-          <strong>HIDOP BOT</strong>
+        <div class="telegram-bar__content">
+          <div>
+            <p class="telegram-bar__eyebrow">Mini App</p>
+            <strong>Hidop_bot</strong>
+          </div>
         </div>
+        <button class="telegram-bar__icon search-toggle" id="searchToggle" type="button" aria-label="Qidiruvni ochish">
+          <span></span>
+        </button>
+        <button class="telegram-bar__icon telegram-bar__profile" type="button" aria-label="Profil">
+          <span class="profile-badge">U</span>
+        </button>
       </div>
-      <button class="telegram-bar__icon telegram-bar__profile" type="button" aria-label="Profil">
-        <span class="profile-badge">U</span>
-      </button>
+    </div>
+
+    <div class="search-row is-hidden" id="searchRow">
+      <input id="searchInput" type="search" placeholder="Video nomi, ID yoki bo'lim bo'yicha qidiring..." autocomplete="off" />
     </div>
 
     <div class="profile-modal is-hidden" id="profileModal" aria-hidden="true">
@@ -44,20 +50,10 @@
 
     <section class="sheet">
       <header class="hero">
-        <div class="hero__inner">
-          <div>
-            <p class="eyebrow">Kutubxona</p>
-            <h1>Pleylist</h1>
-          </div>
-          <button class="search-toggle" id="searchToggle" aria-label="Qidiruvni ochish">
-            <span></span>
-          </button>
+        <div class="filters" id="filters">
+          <button class="filter-chip is-active" type="button">HOME</button>
+          <button class="filter-chip" type="button">Ombor</button>
         </div>
-        <div class="search-row is-hidden" id="searchRow">
-          <input id="searchInput" type="search" placeholder="Video nomi, ID yoki bo'lim bo'yicha qidiring..." autocomplete="off" />
-        </div>
-        <div class="stats" id="stats"></div>
-        <div class="filters" id="filters"></div>
       </header>
 
       <main class="content">
